@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>INFO-6128 FinalProject</title>
+    
+    <base href="https://kingstonkrunal.github.io/INFO-6128-Recipe-App/"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="theme-color" content="#000"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icon.png"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&display=swap" rel="stylesheet"/>
+
+    <link rel="icon" type="image/png" href="assets/images/icon.png" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="assets/images/icon.png" sizes="16x16"/>
+
+    <link rel="manifest" href="manifest.json"/>
+
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css"/>
+    <link rel="stylesheet" type="text/css" href="src/app.css"/>
+</head>
+
+<body>
+<ons-navigator swipeable id="navigator" page="index"></ons-navigator>
+
+<template id="index">
+    <ons-page id="index">
+        <ons-toolbar>
+            <div class="center">Recipe App</div>
+        </ons-toolbar>
+
+        <ons-search-input
+                id="searchInput"
+                placeholder="Search"
+                onchange="getSearchData(document.querySelector(`searchInput`).value)"
+        ></ons-search-input>
+
+        <ons-list id="recipeList">
+            <ons-list-header>Fetched 100 Random Recipes (Search for more)</ons-list-header>
+            <!--            <ons-lazy-repeat id="recipeNameList" style="text-transform: capitalize"></ons-lazy-repeat>-->
+        </ons-list>
+
+        <ons-fab
+                position="bottom right"
+                id="addRecipeButton"
+                onClick="addRecipe()">
+            <ons-icon icon="md-plus"></ons-icon>
+        </ons-fab>
+    </ons-page>
+</template>
+
+<template id="addNewRecipe">
+    <ons-page id="addNewRecipe">
+        <ons-toolbar>
+            <div class="left">
+                <ons-back-button>Back</ons-back-button>
+            </div>
+            <div class="center" id="addNewRecipeTitle" style="text-transform: capitalize">Add New Recipe</div>
+            <div class="right">
+                <ons-toolbar-button onClick="goToMain()">Add</ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+
+        <ons-card>
+            <div class="content card--material" id="newData">
+                <ons-list>
+                    <ons-list-header>Recipe Name</ons-list-header>
+                    <ons-input id="recipeTitle" modifier="underbar" placeholder="Enter Recipe Name"></ons-input>
+
+                    <ons-list-header>Category</ons-list-header>
+                    <ons-input id="recipeCategory" modifier="underbar" placeholder="Enter Category"></ons-input>
+
+                    <ons-list-header>Cusine</ons-list-header>
+                    <ons-input id="recipeCuisine" modifier="underbar" placeholder="Enter Recipe Cuisine"></ons-input>
+
+                    <ons-list-header>Instructions</ons-list-header>
+                    <textarea id="recipeInstructions" rows="10" cols="45" placeholder="Enter Instructions"></textarea>
+
+                    <ons-list-header>Ingredients</ons-list-header>
+                    <ons-input id="ing1" modifier="underbar" placeholder="Enter 1st Ingredient"></ons-input>
+                    <br>
+                    <ons-input id="ing2" modifier="underbar" placeholder="Enter 2nd Ingredient"></ons-input>
+                    <br>
+                    <ons-input id="ing3" modifier="underbar" placeholder="Enter 3rd Ingredient"></ons-input>
+                    <br>
+                    <ons-input id="ing4" modifier="underbar" placeholder="Enter 4th Ingredient"></ons-input>
+                    <br>
+                    <ons-input id="ing5" modifier="underbar" placeholder="Enter 5th Ingredient"></ons-input>
+                    <br>
+                    <ons-input id="ing6" modifier="underbar" placeholder="Enter 6th Ingredient"></ons-input>
+                    <br>
+                    <ons-input id="ing7" modifier="underbar" placeholder="Enter 7th Ingredient"></ons-input>
+                    <br>
+                    <ons-input id="ing8" modifier="underbar" placeholder="Enter 8th Ingredient"></ons-input>
+                    <br>
+                    <ons-input id="ing9" modifier="underbar" placeholder="Enter 9th Ingredient"></ons-input>
+                    <br>
+                    <ons-input id="ing10" modifier="underbar" placeholder="Enter 10th Ingredient"></ons-input>
+                </ons-list>
+            </div>
+        </ons-card>
+    </ons-page>
+</template>
+
+<template id="recipeData">
+    <ons-page id="recipeData">
+        <ons-toolbar>
+            <div class="left">
+                <ons-back-button>Back</ons-back-button>
+            </div>
+            <div class="center" id="recipeDataTitle" style="text-transform: capitalize"></div>
+        </ons-toolbar>
+
+        <ons-card>
+            <div class="loader" id="loader"></div>
+
+            <div id="imageDiv">
+                <img id="mealImage">
+            </div>
+
+            <div class="title card__title" id="name" style="text-transform: capitalize"></div>
+
+            <div class="content card--material" id="data" hidden>
+                <ons-list>
+                    <ons-list-header>Category</ons-list-header>
+                    <p id="categoryType"></p>
+
+                    <ons-list-header>Cuisine</ons-list-header>
+                    <p id="cuisineType"></p>
+
+                    <ons-list-header>Instructions</ons-list-header>
+                    <p id="instructions"></p>
+
+                    <ons-list-header>Ingredients</ons-list-header>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient1"></p>
+                        <p id="measure1" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient2"></p>
+                        <p id="measure2" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient3"></p>
+                        <p id="measure3" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient4"></p>
+                        <p id="measure4" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient5"></p>
+                        <p id="measure5" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient6"></p>
+                        <p id="measure6" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient7"></p>
+                        <p id="measure7" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient8"></p>
+                        <p id="measure8" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient9"></p>
+                        <p id="measure9" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient10"></p>
+                        <p id="measure10" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient11"></p>
+                        <p id="measure11" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient12"></p>
+                        <p id="measure12" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient13"></p>
+                        <p id="measure13" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient14"></p>
+                        <p id="measure14" class="measure"></p>
+                    </div>
+                    <div class="ingredientsDisplay">
+                        <p id="ingredient15"></p>
+                        <p id="measure15" class="measure"></p>
+                    </div>
+
+                    <ons-list-header>YouTube Link</ons-list-header>
+                    <a id="yTLink"></a>
+
+                    <ons-list-header>Source Link</ons-list-header>
+                    <a id="sourceLink"></a>
+                </ons-list>
+            </div>
+        </ons-card>
+    </ons-page>
+    </ons-page>
+</template>
+</body>
+
+<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+<script src="src/app.js"></script>
+<script type="text/javascript">
+    const registerSW = async () => {
+        if ("serviceWorker" in navigator) {
+            try {
+                await navigator.serviceWorker.register(`${window.location.href}service-worker.js`);
+                console.log("Service Worker Registered");
+            } catch (e) {
+                console.error("Error registering Service Worker...", e);
+            }
+        }
+    };
+    registerSW();
+</script>
+</html>
